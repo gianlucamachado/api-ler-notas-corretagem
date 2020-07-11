@@ -22,6 +22,24 @@ module.exports = app => {
         }
     };
 
+    // Get all user
+    controller.getUser = async (req, res) => {
+        const client = await pool.connect();
+        try {
+            const userId = req.params.userId;
+            const user = await dao_users.getById(client, userId);
+            await client.query('COMMIT');
+
+            res.status(200).json(user);
+        } catch (error) {
+            console.error(error);
+            await client.query('ROLLBACK');
+            res.status(400).json(error);
+        } finally {
+            client.release();
+        }
+    };
+
     // save new user
     controller.saveUser = async (req, res) => {
         const client = await pool.connect();

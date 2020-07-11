@@ -8,6 +8,7 @@ module.exports = app => {
         .post(validator.createUser(), [validator.validate, controller.saveUser]);
 
     app.use(auth.verifyJWT).route('/api/v1/users/:userId')
+        .get(validator.getUser(), [validator.validate, controller.getUser])
         .delete(validator.deleteUser(), [validator.validate, controller.removeUser])
         .put(validator.updateUser(), [validator.validate, controller.updateUser]);
 

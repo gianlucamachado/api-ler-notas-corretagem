@@ -61,6 +61,14 @@ module.exports = app => {
         return validator;
     };
 
+    controller.getUser = () => {
+        const validator = [];
+
+        validator.push(param('userId').isInt());
+
+        return validator;
+    };
+
     controller.validate = async (req, res, next) => {
         try {
             const errors = validationResult(req);
