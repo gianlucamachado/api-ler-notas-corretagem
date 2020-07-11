@@ -1,6 +1,7 @@
 const pool = require('../db/pool');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config().parsed;
+
 const UsersDAO = require('../dao/usersDAO').UsersDAO;
 const dao_users = new UsersDAO();
 
@@ -35,7 +36,7 @@ module.exports = app => {
             response.code = 1;
             response.message = 'invalid login';
             await client.query('COMMIT');
-            
+
             res.status(500).json(response);
         } catch (error) {
             console.error(error);
@@ -53,7 +54,7 @@ module.exports = app => {
             response.auth = false;
             response.token = null;
             await client.query('COMMIT');
-            
+
             res.status(200).json(response);
         } catch (error) {
             console.error(error);

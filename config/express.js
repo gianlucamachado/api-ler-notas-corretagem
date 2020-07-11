@@ -14,11 +14,12 @@ module.exports = () => {
   app.use(bodyParser.json());
 
   // ENDPOINTS
-  consign({
-      cwd: 'api'
-    })
+  const path = {};
+  path.cwd = 'api';
+
+  consign(path)
+    .then('validators')
     .then('controllers')
-    .then('dao')
     .then('routes')
     .into(app);
 
