@@ -5,15 +5,23 @@ class UsersDAO {
     constructor() {}
 
     getAllUsers(client) {
-        return client.query('SELECT * FROM users ORDER BY id ASC', []).then(result => result.rows);
+        return client.query('SELECT * FROM users ORDER BY id ASC', [])
+            .then(result => result.rows);
     }
 
     getByEmailPassword(client, email, password) {
-        return client.query('SELECT * FROM users WHERE email = $1 and password = sha256($2)::text', [email, password]).then(result => result.rows[0]);
+        return client.query('SELECT * FROM users WHERE email = $1 and password = sha256($2)::text', [email, password])
+            .then(result => result.rows[0]);
+    }
+
+    getByEmail(client, email) {
+        return client.query('SELECT * FROM users WHERE email = $1', [email])
+            .then(result => result.rows[0]);
     }
 
     getById(client, userId) {
-        return client.query('SELECT * FROM users WHERE id = $1', [userId]).then(result => result.rows[0]);
+        return client.query('SELECT * FROM users WHERE id = $1', [userId])
+            .then(result => result.rows[0]);
     }
 
     removeUser(userId, client) {
@@ -55,14 +63,12 @@ class UsersDAO {
         return new Promise(async (resolve, reject) => {
             const queryText = new StringBuilder();
             queryText.append(' UPDATE users set ');
-            queryText.append(' email = $1 ');
-            queryText.append(' ,complete_name = $2 ');
+            queryText.append(' complete_name = $1 ');
             queryText.append(' WHERE ');
-            queryText.append(' id = $3 ');
+            queryText.append(' id = $2 ');
 
             try {
                 const queryParams = [];
-                queryParams.push(body.email);
                 queryParams.push(body.complete_name);
                 queryParams.push(userId);
 

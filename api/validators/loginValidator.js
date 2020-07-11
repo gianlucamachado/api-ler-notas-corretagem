@@ -6,7 +6,7 @@ module.exports = app => {
 
     controller.login = () => {
         const validator = [];
-        validator.push(body('email').isEmail().normalizeEmail());
+        validator.push(body('email').normalizeEmail().isEmail());
 
         const password = {};
         password.min = 6;

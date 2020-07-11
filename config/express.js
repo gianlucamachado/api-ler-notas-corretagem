@@ -19,6 +19,7 @@ module.exports = () => {
 
   consign(path)
     .then('validators')
+    .then('helpers')
     .then('controllers')
     .then('routes')
     .into(app);
