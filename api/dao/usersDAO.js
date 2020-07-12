@@ -5,27 +5,91 @@ class UsersDAO {
     constructor() {}
 
     getAllUsers(client) {
-        return client.query('SELECT * FROM users ORDER BY id ASC', [])
-            .then(result => result.rows);
+        const queryText = new StringBuilder();
+        queryText.append(' SELECT ');
+        queryText.append(' users.id ');
+        queryText.append(' ,users.email ');
+        queryText.append(' ,users.complete_name ');
+        queryText.append(' ,users.created_on ');
+        queryText.append(' FROM users ');
+        queryText.append(' ORDER BY id ');
+
+        const queryParams = [];
+
+        return client.query(queryText.toString(), queryParams).then(result => result.rows);
     }
 
     getByEmailPassword(client, email, password) {
-        return client.query('SELECT * FROM users WHERE email = $1 and password = sha256($2)::text', [email, password])
-            .then(result => result.rows[0]);
+        const queryText = new StringBuilder();
+        queryText.append(' SELECT ');
+        queryText.append(' users.id ');
+        queryText.append(' ,users.email ');
+        queryText.append(' ,users.complete_name ');
+        queryText.append(' ,users.created_on ');
+        queryText.append(' FROM users ');
+        queryText.append(' WHERE ');
+        queryText.append(' 1 = 1 ');
+        queryText.append(' and email = $1 ');
+        queryText.append(' and password = sha256($2)::text ');
+        queryText.append(' ORDER BY id ');
+
+        const queryParams = [];
+        queryParams.push(email);
+        queryParams.push(password);
+
+        return client.query(queryText.toString(), queryParams).then(result => result.rows[0]);
     }
 
     getByEmail(client, email) {
-        return client.query('SELECT * FROM users WHERE email = $1', [email])
-            .then(result => result.rows[0]);
+        const queryText = new StringBuilder();
+        queryText.append(' SELECT ');
+        queryText.append(' users.id ');
+        queryText.append(' ,users.email ');
+        queryText.append(' ,users.complete_name ');
+        queryText.append(' ,users.created_on ');
+        queryText.append(' FROM users ');
+        queryText.append(' WHERE ');
+        queryText.append(' 1 = 1 ');
+        queryText.append(' and email = $1 ');
+        queryText.append(' ORDER BY id ');
+
+        const queryParams = [];
+        queryParams.push(email);
+
+        return client.query(queryText.toString(), queryParams).then(result => result.rows[0]);
     }
 
     getById(client, userId) {
-        return client.query('SELECT * FROM users WHERE id = $1', [userId])
-            .then(result => result.rows[0]);
+        const queryText = new StringBuilder();
+        queryText.append(' SELECT ');
+        queryText.append(' users.id ');
+        queryText.append(' ,users.email ');
+        queryText.append(' ,users.complete_name ');
+        queryText.append(' ,users.created_on ');
+        queryText.append(' FROM users ');
+        queryText.append(' WHERE ');
+        queryText.append(' 1 = 1 ');
+        queryText.append(' and id = $1 ');
+        queryText.append(' ORDER BY id ');
+
+        const queryParams = [];
+        queryParams.push(userId);
+
+        return client.query(queryText.toString(), queryParams).then(result => result.rows[0]);
     }
 
     removeUser(userId, client) {
-        return client.query('DELETE FROM users WHERE id = $1', [userId]);
+        const queryText = new StringBuilder();
+        queryText.append(' DELETE ');
+        queryText.append(' FROM users ');
+        queryText.append(' WHERE ');
+        queryText.append(' 1 = 1 ');
+        queryText.append(' and id = $1 ');
+
+        const queryParams = [];
+        queryParams.push(userId);
+
+        return client.query(queryText.toString(), queryParams);
     }
 
     createNewUser(body, client) {
@@ -52,7 +116,7 @@ class UsersDAO {
                 queryParams.push(body.password);
 
                 const res = await client.query(queryText.toString(), queryParams);
-                resolve(res.rows[0]);
+                resolve(this.getById(client, res.rows[0].id));
             } catch (error) {
                 reject(error);
             }
@@ -73,7 +137,7 @@ class UsersDAO {
                 queryParams.push(userId);
 
                 const res = await client.query(queryText.toString(), queryParams);
-                resolve(res.rows[0]);
+                resolve(this.getById(client, userId));
             } catch (error) {
                 reject(error);
             }

@@ -3,9 +3,11 @@ module.exports = app => {
     const controller = app.controllers.usersController;
     const validator = app.validators.usersValidator;
 
-    app.use(auth.verifyJWT).route('/api/v1/users')
-        .get(controller.getUsers)
+    app.route('/api/v1/users')
         .post(validator.createUser(), [validator.validate, controller.saveUser]);
+
+    app.use(auth.verifyJWT).route('/api/v1/users')
+        .get(controller.getUsers);
 
     app.use(auth.verifyJWT).route('/api/v1/users/:userId')
         .get(validator.getUser(), [validator.validate, controller.getUser])

@@ -20,8 +20,6 @@ module.exports = app => {
 
                 return response;
             }).then(user => {
-                console.log(user);
-
                 if (user) {
                     return Promise.reject('E-mail already in use');
                 }

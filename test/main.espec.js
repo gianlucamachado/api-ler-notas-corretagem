@@ -7,8 +7,8 @@ chai.use(chaiHttp);
 
 describe('#### MAIN', () => {
 
-    describe('GET main url', () => {
-        it('it should GET main url', done => {
+    describe('GET MAIN URL', () => {
+        it('should GET main url', done => {
             chai.request(server)
                 .get('/api/v1/')
                 .end((err, res) => {

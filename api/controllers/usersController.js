@@ -9,6 +9,7 @@ module.exports = app => {
     controller.getUsers = async (req, res) => {
         const client = await pool.connect();
         try {
+            await client.query('BEGIN');
             const users = await dao_users.getAllUsers(client);
             await client.query('COMMIT');
 
@@ -22,11 +23,12 @@ module.exports = app => {
         }
     };
 
-    // Get all user
+    // Get user
     controller.getUser = async (req, res) => {
         const client = await pool.connect();
         try {
             const userId = req.params.userId;
+            await client.query('BEGIN');
             const user = await dao_users.getById(client, userId);
             await client.query('COMMIT');
 
@@ -44,12 +46,13 @@ module.exports = app => {
     controller.saveUser = async (req, res) => {
         const client = await pool.connect();
         try {
+            await client.query('BEGIN');
             const user = await dao_users.createNewUser(req.body, client);
             await client.query('COMMIT');
-
+            
             res.status(200).json(user);
         } catch (error) {
-            console.error(error);
+            console.log(error);
             await client.query('ROLLBACK');
             res.status(400).json(error);
         } finally {
@@ -62,6 +65,8 @@ module.exports = app => {
         const client = await pool.connect();
         try {
             const userId = req.params.userId;
+
+            await client.query('BEGIN');
             await dao_users.removeUser(userId, client);
             await client.query('COMMIT');
 
@@ -80,6 +85,8 @@ module.exports = app => {
         const client = await pool.connect();
         try {
             const userId = req.params.userId;
+
+            await client.query('BEGIN');
             const user = await dao_users.updateUser(req.body, userId, client);
             await client.query('COMMIT');
 
